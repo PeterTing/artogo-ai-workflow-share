@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>我的 AI 協作工作流｜部門匯報分享</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wall:#EEF0EC; --paper:#FFFFFF; --ink:#1E2A33; --slate:#5B6770; --line:#D5D9D3;
+  --ai:#2F6F73; --ai-soft:#DCEBEA;
+  --me:#C9952B; --me-soft:#F6ECD3;
+  --co:#6A5C8A; --co-soft:#E8E4F0;
+  --save:#3D6B4F; --save-soft:#E3EFE7;
+  --before:#B7BDB8;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--wall);color:var(--ink);font:400 16px/1.65 "Noto Sans TC",system-ui,sans-serif}
+a{color:var(--ai);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--me);outline-offset:2px}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+h1,h2,h3{font-family:"Noto Serif TC",serif;line-height:1.25;margin:0}
+p{margin:0}
+
+/* header */
+header.hero{padding:40px 0 28px;border-bottom:1px solid var(--line)}
+.who{color:var(--slate);font-size:.9rem;margin-bottom:14px}
+.hero h1{font-size:clamp(1.85rem,7.5vw,3.2rem);font-weight:900;letter-spacing:.02em}
+.lede{max-width:36em;margin-top:16px;font-size:1.02rem;color:var(--ink)}
+.legend{display:flex;gap:10px 16px;flex-wrap:wrap;margin-top:20px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.86rem;font-weight:600;color:var(--slate)}
+.chip i{width:12px;height:12px;border-radius:3px;display:inline-block;flex:0 0 12px}
+.chip.me i{background:var(--me)}
+.chip.ai i{background:var(--ai)}
+.chip.co i{background:var(--co)}
+.est{margin-top:10px;font-size:.8rem;color:var(--slate)}
+
+/* sections */
+section{padding:40px 0;border-bottom:1px solid var(--line)}
+.kicker{font-size:.78rem;font-weight:700;letter-spacing:.12em;color:var(--slate);text-transform:uppercase;margin-bottom:6px}
+section > .wrap > h2{font-size:clamp(1.4rem,4.5vw,1.9rem);margin-bottom:8px}
+.intro{color:var(--slate);font-size:.95rem;margin-bottom:20px;max-width:38em}
+
+/* overview */
+.groups{display:grid;gap:22px}
+.group h3{font-family:"Noto Sans TC",sans-serif;font-size:.92rem;font-weight:700;margin-bottom:10px;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.group h3 .split{font-family:"Noto Sans TC",sans-serif;font-weight:500;font-size:.78rem;color:var(--slate)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 12px 12px;display:flex;flex-direction:column;gap:8px;min-height:108px;color:inherit}
+.card:hover{text-decoration:none;border-color:#B8C3BE}
+.card svg{width:22px;height:22px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.card .name{font-weight:700;font-size:.92rem;line-height:1.35}
+.card .save{margin-top:auto;align-self:flex-start;background:var(--save-soft);color:var(--save);font-size:.75rem;font-weight:700;padding:3px 8px;border-radius:999px}
+
+/* total teaser + week stacked bars */
+.teaser{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px 18px;display:grid;gap:16px}
+.teaser .big{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.teaser .num{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(2.4rem,11vw,3.6rem);line-height:1;letter-spacing:-.03em;color:var(--save)}
+.teaser .unit{font-weight:700;font-size:1.05rem}
+.teaser .headline{font-family:"Noto Serif TC",serif;font-weight:700;font-size:clamp(1.05rem,3.8vw,1.35rem);line-height:1.35;margin-top:6px}
+.teaser .sub{color:var(--slate);font-size:.9rem;margin-top:6px}
+.week-vis{display:grid;gap:10px}
+.wrow{display:grid;grid-template-columns:40px 1fr;gap:8px;align-items:start}
+.wl{font-size:.82rem;font-weight:700;color:var(--slate);padding-top:4px}
+.wbar{display:flex;height:22px;border-radius:8px;overflow:hidden;background:#E7EAE6}
+.wbar i{display:block;height:100%;font-style:normal}
+.wbar .flow{background:#6B7578}
+.wbar .value{background:var(--save)}
+.wbar .other{background:#D5D9D3}
+.wmeta{font-size:.78rem;color:var(--slate);margin:5px 0 2px;line-height:1.5}
+.wleg{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:4px;font-size:.78rem;font-weight:600;color:var(--slate)}
+.wleg i{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:5px;vertical-align:-1px}
+.wleg .flow{background:#6B7578}
+.wleg .value{background:var(--save)}
+.wleg .other{background:#D5D9D3;border:1px solid #C3C8C2}
+.wval{font-size:.82rem;color:var(--ink);margin-top:4px;line-height:1.5}
+
+
+/* output comparison */
+.teaser.out{gap:18px}
+.out-grid{display:grid;gap:16px}
+.orow{display:grid;gap:6px}
+.orow .olab{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.orow .olab .ot{font-weight:700;font-size:.92rem}
+.orow .olab .ox{font-weight:700;color:var(--save);font-size:.8rem}
+.opair{display:grid;gap:5px}
+.opair .line{display:grid;grid-template-columns:36px 1fr auto;gap:8px;align-items:center;font-size:.8rem}
+.opair .line .k{color:var(--slate);font-weight:600}
+.opair .line .n{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.exnow{margin:2px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.exnow li{background:var(--save-soft);border-radius:12px;padding:10px 12px;font-size:.86rem;line-height:1.45}
+.exnow b{display:block;font-size:.9rem;margin-bottom:1px;color:var(--ink)}
+.exhead{font-weight:700;font-size:.9rem;margin:0}
+.src{font-size:.76rem;color:var(--slate);line-height:1.55;margin:0}
+
+
+.period{display:grid;gap:12px}
+.pcard{background:#F7F8F6;border-radius:14px;padding:14px 14px 12px;display:grid;gap:10px}
+.pcard h3{font-family:"Noto Sans TC",sans-serif;font-size:.92rem;font-weight:700}
+.pcard .when{font-size:.75rem;font-weight:600;color:var(--slate);margin-top:2px}
+.people{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.picons{display:flex;gap:2px}
+.picon{width:22px;height:22px;stroke:var(--ink);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pcard.now .picon{stroke:var(--ai)}
+.picon.dim{opacity:.38}
+.people .plab{font-size:.8rem;font-weight:700;color:var(--ink)}
+.pm{display:grid;gap:7px}
+.pm .line{display:grid;grid-template-columns:7.2em 1fr auto;gap:8px;align-items:center;font-size:.78rem}
+.pm .line .k{color:var(--slate);font-weight:600;line-height:1.3}
+.pm .line .n{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pm .line.me .n{color:var(--ai)}
+.pm .line.me .k{color:var(--ai);font-weight:700}
+.muted{font-size:.76rem;color:var(--slate);line-height:1.45;margin:2px 0 0}
+
+.roster{margin:0;padding:0;list-style:none;display:grid;gap:3px;font-size:.76rem;color:var(--slate);line-height:1.45}
+.roster li{padding-left:0}
+.picon.pt{stroke-dasharray:3 2;opacity:.85}
+.pm .line .k{font-size:.74rem}
+@media (min-width:640px){
+  .period{grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+}
+
+/* day rhythm */
+.day{display:grid;gap:0;position:relative;padding-left:2px}
+.day::before{content:"";position:absolute;left:71px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.slot{display:grid;grid-template-columns:56px 14px 1fr;gap:8px;align-items:center;padding:7px 0;position:relative}
+.slot time{font-family:"Noto Serif TC",serif;font-weight:900;font-size:.95rem;text-align:right}
+.slot .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--wall);justify-self:center;z-index:1}
+.slot.me .dot{background:var(--me)}
+.slot.ai .dot{background:var(--ai)}
+.slot.co .dot{background:var(--co)}
+.slot .lbl{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-weight:600;font-size:.9rem;width:fit-content;max-width:100%}
+
+/* workflow block */
+.wf{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 14px 16px;margin:0 0 14px}
+.wf header{margin-bottom:4px}
+.wf h3{font-size:1.12rem}
+.wf .cap{color:var(--slate);font-size:.86rem;margin:4px 0 14px}
+
+/* steps */
+.steps{display:flex;flex-direction:column;align-items:stretch;gap:0}
+.step{display:grid;grid-template-columns:52px 1fr;gap:8px;align-items:stretch}
+.badge{display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;border-radius:999px;align-self:center;height:28px;padding:0 6px;letter-spacing:.02em;white-space:nowrap}
+.step.me .badge{background:var(--me-soft);color:#8A6418}
+.step.ai .badge{background:var(--ai-soft);color:var(--ai)}
+.step.co .badge{background:var(--co-soft);color:var(--co)}
+.txt{border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-weight:600;font-size:.92rem;line-height:1.4;border-left-width:4px}
+.step.me .txt{border-left-color:var(--me);background:#FFFCF6}
+.step.ai .txt{border-left-color:var(--ai);background:#F5FAF9}
+.step.co .txt{border-left-color:var(--co);background:#FAF8FD}
+.join{display:flex;align-items:center;justify-content:center;height:14px;margin-left:25px}
+.join::before{content:"";width:2px;height:14px;background:var(--line)}
+
+/* hours */
+.hours{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);display:grid;gap:7px}
+.hr{display:grid;grid-template-columns:36px 1fr auto;gap:8px;align-items:center;font-size:.8rem}
+.hr .k{color:var(--slate);font-weight:600}
+.hr .n{font-weight:700;font-variant-numeric:tabular-nums;min-width:5.6em;text-align:right}
+.hbar{height:10px;background:#E7EAE6;border-radius:99px;overflow:hidden}
+.hbar i{display:block;height:100%;border-radius:99px;min-width:6px}
+.hbar .old{background:var(--before)}
+.hbar .now{background:var(--ai)}
+.h-save{font-size:.82rem;font-weight:700;color:var(--save);text-align:right}
+
+/* area split pill */
+.area-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-bottom:8px}
+.area-head h2{margin:0}
+.pill{font-size:.78rem;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-weight:600}
+.pill b{font-weight:700}
+.pill .c-ai{color:var(--ai)}
+.pill .c-me{color:#8A6418}
+
+
+/* lifecycle (product) */
+.life{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ls{display:grid;grid-template-columns:52px 1fr;gap:8px;align-items:start}
+.ls .badge{margin-top:6px}
+.ls .body{border:1px solid var(--line);border-radius:10px;padding:9px 11px;border-left-width:4px}
+.ls .ttl{font-weight:700;font-size:.95rem;line-height:1.35}
+.ls .why{margin-top:3px;font-size:.8rem;color:var(--slate);font-weight:400;line-height:1.45}
+.ls .why b{font-weight:700}
+.ls.me .body{border-left-color:var(--me);background:#FFFCF6}
+.ls.me .why b{color:#8A6418}
+.ls.ai .body{border-left-color:var(--ai);background:#F5FAF9}
+.ls.ai .why b{color:var(--ai)}
+.ls.co .body{border-left-color:var(--co);background:#FAF8FD}
+.ls.co .why b{color:var(--co)}
+.phase{font-size:.78rem;font-weight:700;letter-spacing:.1em;color:var(--slate);margin:18px 0 8px}
+.fork{display:grid;gap:12px}
+.lane{background:#F7F8F6;border:1px solid var(--line);border-radius:14px;padding:12px 10px}
+.lane-h{font-family:"Noto Serif TC",serif;font-weight:900;font-size:1.02rem;margin-bottom:10px}
+.lane-or{display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--slate);letter-spacing:.2em}
+.merge{display:flex;align-items:center;gap:10px;margin:14px 0 2px;font-size:.86rem;color:var(--slate);font-weight:600;text-align:center}
+.merge::before,.merge::after{content:"";flex:1;height:1px;background:var(--line)}
+.loop{margin:4px 0 14px;border:1.5px dashed #C9952B;background:var(--me-soft);border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start}
+.loop .ico{width:28px;height:28px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.loop .ico svg{width:16px;height:16px;stroke:#8A6418;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.loop b{display:block;font-weight:700;font-size:.9rem;margin-bottom:2px}
+.loop p{font-size:.8rem;color:var(--ink);margin:0}
+.h-note{font-size:.8rem;color:var(--slate);margin:0 0 8px}
+.h-note + .h-note,.hours .h-note:last-child{margin:8px 0 0}
+.group.solo .cards{grid-template-columns:1fr}
+@media (min-width:640px){
+  .fork{grid-template-columns:1fr 28px 1fr;align-items:stretch}
+  .group.solo .cards{grid-template-columns:repeat(3,1fr)}
+  .group.solo .card{max-width:280px}
+}
+@media (min-width:860px){
+  .group.solo .cards{grid-template-columns:repeat(5,1fr)}
+  .group.solo .card{max-width:none}
+}
+
+
+.ex{margin:8px 0 0;font-size:.82rem;color:var(--slate);line-height:1.45}
+.cases{display:grid;gap:10px;margin-top:16px}
+.cases-h{font-size:.78rem;font-weight:700;letter-spacing:.1em;color:var(--slate);margin:18px 0 8px}
+.case{border:1px solid var(--line);border-radius:14px;padding:14px 14px 12px;background:#F7F8F6}
+.case h4{font-family:"Noto Sans TC",sans-serif;font-size:1rem;font-weight:700;margin:6px 0 4px}
+.case .tag{display:inline-flex;font-size:.72rem;font-weight:700;border-radius:999px;padding:3px 8px}
+.case .tag.feat{background:var(--ai-soft);color:var(--ai)}
+.case .tag.bug{background:var(--me-soft);color:#8A6418}
+.case .blurb{font-size:.86rem;color:var(--slate);margin:0 0 10px;line-height:1.45}
+.case .map{display:flex;flex-wrap:wrap;gap:6px}
+.case .map span{font-size:.75rem;font-weight:600;border-radius:999px;padding:4px 8px;line-height:1.35}
+.case .map .ai{background:var(--ai-soft);color:var(--ai)}
+.case .map .me{background:var(--me-soft);color:#8A6418}
+.case .map .co{background:var(--co-soft);color:var(--co)}
+@media (min-width:640px){
+  .cases{grid-template-columns:1fr 1fr}
+}
+
+/* decide + tips */
+.decide{display:grid;gap:10px}
+.d-card{background:var(--me-soft);border-radius:14px;padding:14px 14px 12px;display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:start}
+.d-card .ico{width:36px;height:36px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center}
+.d-card .ico svg{width:18px;height:18px;stroke:#8A6418;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.d-card h3{font-family:"Noto Sans TC",sans-serif;font-size:.95rem;font-weight:700;margin-bottom:2px}
+.d-card p{font-size:.86rem;color:var(--ink)}
+
+.tips{display:grid;gap:10px}
+.tip{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 14px 12px;display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:start}
+.tip .n{font-family:"Noto Serif TC",serif;font-weight:900;font-size:1.2rem;color:var(--ai);line-height:1}
+.tip h3{font-family:"Noto Sans TC",sans-serif;font-size:.95rem;font-weight:700;margin-bottom:2px}
+.tip p{font-size:.86rem;color:var(--slate)}
+
+/* totals breakdown */
+.areasum{display:grid;gap:10px;margin-top:4px}
+.asum{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.asum h3{font-family:"Noto Sans TC",sans-serif;font-size:.92rem;font-weight:700;margin-bottom:8px}
+.asum .pair{display:flex;justify-content:space-between;font-size:.82rem;color:var(--slate);margin-bottom:6px}
+.asum .pair b{color:var(--ink)}
+
+footer{padding:28px 0 48px;color:var(--slate);font-size:.84rem}
+
+@media (min-width:640px){
+  .wrap{padding:0 20px}
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .decide,.tips{grid-template-columns:repeat(3,1fr)}
+  .tips{grid-template-columns:1fr 1fr}
+  .areasum{grid-template-columns:repeat(3,1fr)}
+  .teaser{padding:24px 28px}
+}
+@media (min-width:860px){
+  .steps{flex-direction:row;align-items:stretch;gap:0}
+  .step{display:flex;flex-direction:column;flex:1;min-width:0;gap:8px}
+  .badge{align-self:flex-start;padding:0 10px;height:24px}
+  .txt{flex:1}
+  .join{height:auto;margin:0;width:18px;flex:0 0 18px;align-self:center}
+  .join::before{width:18px;height:2px}
+  .wf{padding:20px 20px 16px}
+  .tips{grid-template-columns:repeat(3,1fr)}
+  .cards{grid-template-columns:repeat(5,1fr)}
+  .slot .lbl{width:fit-content;max-width:100%}
+}
+.wf,.day,section[id]{scroll-margin-top:12px}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="who">Peter｜產品｜2026 年 11 月 16 日部門匯報</div>
+    <h1>我的 AI 協作工作流</h1>
+    <p class="lede">我把找資料、整理、追進度、寫初稿交給 AI，自己留下判斷、決定、對外說話。交辦常常是用語音講一句，東西都做成手機能直接打開的網頁。</p>
+    <div class="legend" aria-label="圖例">
+      <span class="chip me"><i></i>我做</span>
+      <span class="chip ai"><i></i>AI 做</span>
+      <span class="chip co"><i></i>協作（人＋AI）</span>
+    </div>
+    <p class="est">我一週工作約 45 小時（5 天）。產出比較依卡片紀錄統計；各流程花的時間是個人估算。</p>
+  </div>
+</header>
+
+<section id="work">
+  <div class="wrap">
+    <div class="kicker">01</div>
+    <h2>我有哪些工作</h2>
+    <p class="intro">先看全貌。點進去可以看到每個流程怎麼走、哪些步驟是我做、哪些是 AI 做。</p>
+    <div class="groups">
+
+      <div class="group">
+        <h3>日常營運 <span class="split">AI 約 85%　我約 15%</span></h3>
+        <div class="cards">
+          <a class="card" href="#wf-brief">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
+            <span class="name">每日工作建議</span>
+            <span class="save">少花 2 小時/週</span>
+          </a>
+          <a class="card" href="#wf-time">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8M7 8h10M7 12h10M7 16h6"/><rect x="5" y="3" width="14" height="18" rx="2"/></svg>
+            <span class="name">工時表</span>
+            <span class="save">少花 1.5 小時/週</span>
+          </a>
+          <a class="card" href="#wf-dash">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg>
+            <span class="name">待辦 Dashboard</span>
+            <span class="save">少花 2.5 小時/週</span>
+          </a>
+          <a class="card" href="#wf-report">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M15 4v5h5M8 13h8M8 17h5"/></svg>
+            <span class="name">部門匯報準備</span>
+            <span class="save">少花 2 小時/週</span>
+          </a>
+          <a class="card" href="#wf-misc">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 1 1 12 0c0 3.2 1.5 5 1.5 5H4.5S6 12.2 6 9z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+            <span class="name">雜項與提醒</span>
+            <span class="save">少花 0.5 小時/週</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="group solo">
+        <h3>產品開發 <span class="split">AI 約 70%　我約 30%</span></h3>
+        <div class="cards">
+          <a class="card" href="#wf-dev">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M8 6h8M7.5 7.8 10.6 16.2M16.5 7.8 13.4 16.2"/></svg>
+            <span class="name">新功能／Bug 開發流程</span>
+            <span class="save">少花 11 小時/週</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>業務與營運協作 <span class="split">AI 約 45%　我約 55%</span></h3>
+        <div class="cards">
+          <a class="card" href="#wf-finance">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><rect x="6" y="11" width="3.2" height="8" rx="1"/><rect x="10.9" y="6" width="3.2" height="13" rx="1"/><rect x="15.8" y="13" width="3.2" height="6" rx="1"/></svg>
+            <span class="name">對財報</span>
+            <span class="save">少花 2 小時/週</span>
+          </a>
+          <a class="card" href="#wf-research">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
+            <span class="name">研究查證</span>
+            <span class="save">少花 1.5 小時/週</span>
+          </a>
+          <a class="card" href="#wf-track">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="2.4"/><circle cx="16" cy="8" r="2.4"/><path d="M4.5 18c.6-2.6 2.4-4 3.5-4s2.9 1.4 3.5 4M12.5 18c.6-2.6 2.4-4 3.5-4s2.9 1.4 3.5 4"/></svg>
+            <span class="name">跨部門追蹤</span>
+            <span class="save">少花 1 小時/週</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+                <div class="teaser out">
+      <div>
+        <div class="big"><span class="num">6</span><span class="unit">倍</span></div>
+        <p class="headline">有 AI 協作後，工程人均產出約 6 倍</p>
+        <p class="sub">人均以 2 位正職相除；兼職如實列出，不換成正職。2026 年 10–12 月尚未過完，先統計到 11 月 18 日。</p>
+      </div>
+      <div class="period">
+        <article class="pcard">
+          <div>
+            <h3>2025 年 1–3 月</h3>
+          </div>
+          <div class="people">
+            <span class="picons" aria-hidden="true"><svg class="picon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg><svg class="picon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg><svg class="picon pt" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg></span>
+            <span class="plab">正職 2 人＋兼職 1 人</span>
+          </div>
+          <ul class="roster">
+            <li>我（技術長，正職，全季）</li>
+            <li>鄭皓天（前端，正職，做到 2/14）</li>
+            <li>丞俊（前端，兼職，2/6 起）</li>
+          </ul>
+          <div class="pm">
+            <div class="line"><span class="k">開發產出</span><div class="hbar"><i class="old" style="width:17.6%"></i></div><span class="n">0.6 張/週</span></div>
+            <div class="line"><span class="k">人均（÷ 2 位正職）</span><div class="hbar"><i class="old" style="width:8.8%"></i></div><span class="n">0.3 張/週</span></div>
+          </div>
+          <p class="muted">個人產出無法從卡片指派分開計算（多數單未指派到人）。</p>
+        </article>
+        <article class="pcard now">
+          <div>
+            <h3>2026 年 10 月–11 月 18 日</h3>
+            <p class="when">12 月尚未開始，先統計到今天</p>
+          </div>
+          <div class="people">
+            <span class="picons" aria-hidden="true"><svg class="picon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg><svg class="picon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg></span>
+            <span class="plab">正職 2 人（皆參與開發）</span>
+          </div>
+          <ul class="roster">
+            <li>我（正職，全期）</li>
+            <li>Bettina（產品設計，正職，亦參與開發，全期）</li>
+          </ul>
+          <div class="pm">
+            <div class="line"><span class="k">開發產出</span><div class="hbar"><i class="now" style="width:100%"></i></div><span class="n">3.4 張/週</span></div>
+            <div class="line"><span class="k">人均（÷ 2 位正職）</span><div class="hbar"><i class="now" style="width:50%"></i></div><span class="n">1.7 張/週</span></div>
+            <div class="line"><span class="k">其中：我</span><div class="hbar"><i class="now" style="width:70.6%"></i></div><span class="n">2.4 張/週</span></div>
+            <div class="line"><span class="k">其中：Bettina</span><div class="hbar"><i class="now" style="width:29.4%"></i></div><span class="n">1.0 張/週</span></div>
+          </div>
+        </article>
+      </div>
+      <p class="exhead">空出來的時間，這段期間實際做了：</p>
+      <ul class="exnow">
+        <li><b>產品線架構拆分</b>第一到五階段已展開，第一階段已進測試站</li>
+        <li><b>內部系統後台串戴尼</b>金流對帳流程調整中</li>
+        <li><b>AI 自動翻譯</b>已正式上線</li>
+        <li><b>臺史博導覽系統</b>需求訪談與設計迭代進行中</li>
+      </ul>
+      <p class="src">依卡片紀錄統計。比較 2025 年 1–3 月工程師（正職＋兼職）與 2026 年 10 月 1 日–11 月 18 日兩位開發者的開發單，皆為每週平均；開卡落在區間內、目前狀態為已完成。2025 年 1–3 月是基礎建設期，開卡較少、粒度也較粗；現在一項功能常拆成多張子執行卡，張數會偏高。11 月進行中未計入，現在偏保守。人均以 2 位正職相除，兼職不列入分母、也不折算成正職。各流程花的時間仍是個人估算。</p>
+    </div>
+  </div>
+</section>
+
+<section id="day">
+  <div class="wrap">
+    <div class="kicker">02</div>
+    <h2>一天的節奏</h2>
+    <p class="intro">以今天為例。黃色是我要出手的時間點，紫色是一起做，其餘時間 AI 在背景跑。</p>
+    <div class="day">
+      <div class="slot ai"><time>08:00</time><span class="dot"></span><div class="lbl">工作建議送到手機</div></div>
+      <div class="slot me"><time>09:00</time><span class="dot"></span><div class="lbl">我看過、回幾個決定</div></div>
+      <div class="slot ai"><time>10:00</time><span class="dot"></span><div class="lbl">待辦表第一次同步，之後每 2 小時一次</div></div>
+      <div class="slot co"><time>10:30</time><span class="dot"></span><div class="lbl">週會，產品進度稿已先備好</div></div>
+      <div class="slot co"><time>白天</time><span class="dot"></span><div class="lbl">隨時語音交辦，表就跟著改</div></div>
+      <div class="slot me"><time>13:30</time><span class="dot"></span><div class="lbl">部門匯報</div></div>
+      <div class="slot ai"><time>晚上</time><span class="dot"></span><div class="lbl">對帳今天實際做了什麼、填時數</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="flows">
+  <div class="wrap">
+    <div class="kicker">03</div>
+    <div class="area-head">
+      <h2>日常營運怎麼走</h2>
+      <span class="pill"><b class="c-ai">AI 約 85%</b>　<b class="c-me">我約 15%</b></span>
+    </div>
+    <p class="intro">最先交出去、也最有感的一塊。</p>
+
+    <article class="wf" id="wf-brief">
+      <header><h3>每日工作建議</h3></header>
+      <p class="cap">早上 8 點前送到手機，一打開就看到重點和要我決定的事。</p>
+      <p class="ex">例：各平台待辦收成一張 8 小時的表，有截止日的會提前拆好。</p>
+      <div class="steps">
+        <div class="step ai"><span class="badge">AI</span><span class="txt">彙整各平台待辦</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">排成 8 小時</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">早上送到手機</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step me"><span class="badge">我</span><span class="txt">看過並做決定</span></div>
+      </div>
+      <div class="hours">
+        <p class="h-note">這個流程花的時間（個人估算）</p>
+        <div class="hr"><span class="k">原本</span><div class="hbar"><i class="old" style="width:31.25%"></i></div><span class="n">2.5 小時/週</span></div>
+        <div class="hr"><span class="k">現在</span><div class="hbar"><i class="now" style="width:6.25%"></i></div><span class="n">0.5 小時/週</span></div>
+        <div class="h-save">此流程少花 2 小時/週</div>
+      </div>
+    </article>
+
+    <article class="wf" id="wf-time">
+      <header><h3>工時表</h3></header>
+      <p class="cap">早上填工作列、時數留空；晚上依實際紀錄對帳再填時數。</p>
+      <p class="ex">例：語音講一句，工作列就跟著改。</p>
+      <div class="steps">
+        <div class="step me"><span class="badge">我</span><span class="txt">確認今日工作</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">填好工作列</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step co"><span class="badge">協作</span><span class="txt">語音交辦，立刻改</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">晚上對帳、填時數</span></div>
+      </div>
+      <div class="hours">
+        <p class="h-note">這個流程花的時間（個人估算）</p>
+        <div class="hr"><span class="k">原本</span><div class="hbar"><i class="old" style="width:25%"></i></div><span class="n">2 小時/週</span></div>
+        <div class="hr"><span class="k">現在</span><div class="hbar"><i class="now" style="width:6.25%"></i></div><span class="n">0.5 小時/週</span></div>
+        <div class="h-save">此流程少花 1.5 小時/週</div>
+      </div>
+    </article>
+
+    <article class="wf" id="wf-dash">
+      <header><h3>待辦 Dashboard</h3></header>
+      <p class="cap">待辦不再散在卡片、討論串和程式變更裡，一張表看完，還能點回出處。</p>
+      <p class="ex">例：不確定是不是我的事，先放「確認中」等我回。</p>
+      <div class="steps">
+        <div class="step ai"><span class="badge">AI</span><span class="txt">每 2 小時同步狀態</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">整理成一張表</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step me"><span class="badge">我</span><span class="txt">回「確認中」的項目</span></div>
+      </div>
+      <div class="hours">
+        <p class="h-note">這個流程花的時間（個人估算）</p>
+        <div class="hr"><span class="k">原本</span><div class="hbar"><i class="old" style="width:37.5%"></i></div><span class="n">3 小時/週</span></div>
+        <div class="hr"><span class="k">現在</span><div class="hbar"><i class="now" style="width:6.25%"></i></div><span class="n">0.5 小時/週</span></div>
+        <div class="h-save">此流程少花 2.5 小時/週</div>
+      </div>
+    </article>
+
+    <article class="wf" id="wf-report">
+      <header><h3>部門匯報準備</h3></header>
+      <p class="cap">週會與月度回顧，準備時間從翻資料變成看稿。</p>
+      <p class="ex">例：這次「AI 導入盤點」也是先整理進匯報頁。</p>
+      <div class="steps">
+        <div class="step ai"><span class="badge">AI</span><span class="txt">彙整會後進度</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">寫進匯報頁</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step me"><span class="badge">我</span><span class="txt">改重點與語氣</span></div>
+      </div>
+      <div class="hours">
+        <p class="h-note">這個流程花的時間（個人估算）</p>
+        <div class="hr"><span class="k">原本</span><div class="hbar"><i class="old" style="width:31.25%"></i></div><span class="n">2.5 小時/週</span></div>
+        <div class="hr"><span class="k">現在</span><div class="hbar"><i class="now" style="width:6.25%"></i></div><span class="n">0.5 小時/週</span></div>
+        <div class="h-save">此流程少花 2 小時/週</div>
+      </div>
+    </article>
+
+    <article class="wf" id="wf-misc">
+      <header><h3>雜項與提醒</h3></header>
+      <p class="cap">網域續約、工作區設定這類不難、但很容易忘的事。</p>
+      <p class="ex">例：網域續約會提前一週提醒。</p>
+      <div class="steps">
+        <div class="step ai"><span class="badge">AI</span><span class="txt">列出步驟、追進度</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">到期前提醒</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step me"><span class="badge">我</span><span class="txt">決定何時處理</span></div>
+      </div>
+      <div class="hours">
+        <p class="h-note">這個流程花的時間（個人估算）</p>
+        <div class="hr"><span class="k">原本</span><div class="hbar"><i class="old" style="width:12.5%"></i></div><span class="n">1 小時/週</span></div>
+        <div class="hr"><span class="k">現在</span><div class="hbar"><i class="now" style="width:6.25%"></i></div><span class="n">0.5 小時/週</span></div>
+        <div class="h-save">此流程少花 0.5 小時/週</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="product">
+  <div class="wrap">
+    <div class="kicker">04</div>
+    <div class="area-head">
+      <h2>產品開發怎麼走</h2>
+      <span class="pill"><b class="c-ai">AI 約 70%</b>　<b class="c-me">我約 30%</b></span>
+    </div>
+    <p class="intro">這是新功能和 Bug 從進來到上線的同一條路。AI 做實作、測試和第一輪檢查；關鍵審查、上正式站，以及最後驗收，仍由人把關。</p>
+
+    <article class="wf" id="wf-dev">
+      <header><h3>新功能／Bug 開發流程</h3></header>
+      <p class="cap">開頭兩條路不一樣，匯合後一起走到正式站。顏色還是：我做、AI 做、協作。</p>
+
+      <div class="phase">開頭：兩條路</div>
+      <div class="fork">
+        <div class="lane">
+          <div class="lane-h">新功能</div>
+          <ol class="life">
+            <li class="ls co"><span class="badge">協作</span><div class="body"><div class="ttl">需求進來</div><div class="why"><b>AI</b> 把口述整理成要點　·　<b>我</b> 決定要不要做、做到哪</div></div></li>
+            <li class="ls co"><span class="badge">協作</span><div class="body"><div class="ttl">開卡，寫規格與驗收標準</div><div class="why"><b>AI</b> 起草規格和驗收標準　·　<b>我</b> 確認內容和負責人</div></div></li>
+            <li class="ls co"><span class="badge">協作</span><div class="body"><div class="ttl">設計對齊</div><div class="why"><b>我</b> 有設計稿時，先和設計對齊畫面與互動　·　<b>AI</b> 幫對規格</div></div></li>
+            <li class="ls co"><span class="badge">協作</span><div class="body"><div class="ttl">拆任務</div><div class="why"><b>AI</b> 依系統拆成可執行的工作　·　<b>我</b> 確認拆法</div></div></li>
+          </ol>
+        </div>
+        <div class="lane-or" aria-hidden="true">或</div>
+        <div class="lane">
+          <div class="lane-h">Bug</div>
+          <ol class="life">
+            <li class="ls co"><span class="badge">協作</span><div class="body"><div class="ttl">問題回報</div><div class="why"><b>我或同事</b> 描述問題　·　<b>AI</b> 先聽懂發生什麼事</div></div></li>
+            <li class="ls co"><span class="badge">協作</span><div class="body"><div class="ttl">重現與定位</div><div class="why"><b>AI</b> 依描述重現、幫忙定位　·　<b>我</b> 補關鍵線索</div></div></li>
+            <li class="ls co"><span class="badge">協作</span><div class="body"><div class="ttl">開卡（重現步驟、預期與實際）</div><div class="why"><b>AI</b> 一次擬好整張卡　·　<b>我</b> 看過才建立</div></div></li>
+          </ol>
+        </div>
+      </div>
+      <div class="merge">匯合後，走同一條開發與上線流程</div>
+
+      <div class="phase">開發</div>
+      <ol class="life">
+        <li class="ls ai"><span class="badge">AI</span><div class="body"><div class="ttl">實作</div><div class="why"><b>AI</b> 寫程式；已上線的行為若壞了，會先補回歸測試。關鍵取捨會先問我</div></div></li>
+        <li class="ls ai"><span class="badge">AI</span><div class="body"><div class="ttl">自動測試與本地檢查</div><div class="why"><b>AI</b> 跑測試，並在送審前自己先驗過</div></div></li>
+        <li class="ls ai"><span class="badge">AI</span><div class="body"><div class="ttl">AI 程式審查</div><div class="why"><b>AI</b> 另一組獨立看程式，不是同一組自己審自己</div></div></li>
+        <li class="ls me"><span class="badge">我</span><div class="body"><div class="ttl">人工程式審查</div><div class="why"><b>我</b> 看重點，決定能不能進測試站</div></div></li>
+      </ol>
+
+      <div class="phase">測試站</div>
+      <ol class="life">
+        <li class="ls ai"><span class="badge">AI</span><div class="body"><div class="ttl">上測試站</div><div class="why"><b>AI</b> 送到測試站並完成部署</div></div></li>
+        <li class="ls ai"><span class="badge">AI</span><div class="body"><div class="ttl">AI 功能檢查</div><div class="why"><b>AI</b> 在測試站依驗收標準實際操作；沒過就先修到過，才交給人驗</div></div></li>
+        <li class="ls co"><span class="badge">協作</span><div class="body"><div class="ttl">人工功能驗收</div><div class="why"><b>驗收同事</b> 在測試站確認　·　<b>AI</b> 先整理檢查清單與紀錄</div></div></li>
+      </ol>
+      <div class="loop">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.2-5.5"/><path d="M4 5v5h5"/></svg></div>
+        <div>
+          <b>修正回圈</b>
+          <p>人驗沒過，就打回實作，再走審查與測試站，直到通過。</p>
+        </div>
+      </div>
+
+      <div class="phase">正式站</div>
+      <ol class="life">
+        <li class="ls me"><span class="badge">我</span><div class="body"><div class="ttl">上正式站</div><div class="why"><b>我</b> 同意後才上，預設晚上</div></div></li>
+        <li class="ls co"><span class="badge">協作</span><div class="body"><div class="ttl">正式站驗收、結卡</div><div class="why"><b>驗收同事</b> 在正式站確認後才結卡。正式站有真實資料，沒有 AI 先驗這一輪</div></div></li>
+      </ol>
+
+      <div class="cases-h">實際案例</div>
+      <div class="cases">
+        <div class="case">
+          <span class="tag feat">新功能 · 已正式上線</span>
+          <h4>AI 自動翻譯</h4>
+          <p class="blurb">展覽內容可自動翻成多語，完整走完從規格到正式站的流程。</p>
+          <div class="map">
+            <span class="ai">AI：起草、實作、測試、第一輪檢查</span>
+            <span class="me">我：規格拍板、程式審查、同意上正式站</span>
+            <span class="co">同事：測試站與正式站驗收</span>
+          </div>
+        </div>
+        <div class="case">
+          <span class="tag bug">Bug · 測試站已修復</span>
+          <h4>數據後台載入失敗</h4>
+          <p class="blurb">後台打不開、資料連不上。根因已找到並修好，人驗通過後再上正式站。</p>
+          <div class="map">
+            <span class="ai">AI：重現、定位、修正、測試站檢查</span>
+            <span class="me">我：確認修法、程式審查</span>
+            <span class="co">下一步：人驗後，我同意再上正式站</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hours">
+        <p class="h-note">一件典型新功能，這個流程花的時間（個人估算）</p>
+        <div class="hr"><span class="k">原本</span><div class="hbar"><i class="old" style="width:100%"></i></div><span class="n">12 小時/件</span></div>
+        <div class="hr"><span class="k">現在</span><div class="hbar"><i class="now" style="width:29.2%"></i></div><span class="n">3.5 小時/件</span></div>
+        <div class="h-save">此流程少花約 8.5 小時/件</div>
+        <p class="h-note">連同當週修復，花在這條開發流程上約 15 → 4 小時/週，少花 11 小時，轉去做規劃與架構等（個人估算）。</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="biz">
+  <div class="wrap">
+    <div class="kicker">05</div>
+    <div class="area-head">
+      <h2>業務與營運協作怎麼走</h2>
+      <span class="pill"><b class="c-ai">AI 約 45%</b>　<b class="c-me">我約 55%</b></span>
+    </div>
+    <p class="intro">這塊人的比重最高，AI 主要是幫我不漏球、查得快。</p>
+
+    <article class="wf" id="wf-finance">
+      <header><h3>對財報</h3></header>
+      <p class="cap">整理報表、比對帳務、標出該看的地方。AI 不入帳，判斷和後續動作由我決定。</p>
+      <div class="steps">
+        <div class="step co"><span class="badge">協作</span><span class="txt">收集報表與帳務資料</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">整理、比對、標出異常與趨勢</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step me"><span class="badge">我</span><span class="txt">確認異常與判斷</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step co"><span class="badge">協作</span><span class="txt">產出摘要與後續動作</span></div>
+      </div>
+      <p class="ex">例：每月對帳時，AI 先把差異和趨勢標出來，我再決定怎麼處理。</p>
+      <div class="hours">
+        <p class="h-note">這個流程花的時間。實際多半按月對，這裡折成每週（個人估算）</p>
+        <div class="hr"><span class="k">原本</span><div class="hbar"><i class="old" style="width:37.5%"></i></div><span class="n">3 小時/週</span></div>
+        <div class="hr"><span class="k">現在</span><div class="hbar"><i class="now" style="width:12.5%"></i></div><span class="n">1 小時/週</span></div>
+        <div class="h-save">此流程少花 2 小時/週</div>
+      </div>
+    </article>
+
+    <article class="wf" id="wf-research">
+      <header><h3>研究查證</h3></header>
+      <p class="cap">例：讓 Claude 有自己的 Slack bot 身分，要不要另外計費？</p>
+      <div class="steps">
+        <div class="step me"><span class="badge">我</span><span class="txt">提出問題</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">查官方文件</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step me"><span class="badge">我</span><span class="txt">帶來源回覆同事</span></div>
+      </div>
+      <div class="hours">
+        <p class="h-note">這個流程花的時間（個人估算）</p>
+        <div class="hr"><span class="k">原本</span><div class="hbar"><i class="old" style="width:25%"></i></div><span class="n">2 小時/週</span></div>
+        <div class="hr"><span class="k">現在</span><div class="hbar"><i class="now" style="width:6.25%"></i></div><span class="n">0.5 小時/週</span></div>
+        <div class="h-save">此流程少花 1.5 小時/週</div>
+      </div>
+    </article>
+
+    <article class="wf" id="wf-track">
+      <header><h3>跨部門追蹤</h3></header>
+      <p class="cap">例：臺史博專案第二階段報告書。沒有主人的工作會提早被翻出來。</p>
+      <div class="steps">
+        <div class="step ai"><span class="badge">AI</span><span class="txt">發現沒人認領</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step co"><span class="badge">協作</span><span class="txt">先問我是不是我的</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step me"><span class="badge">我</span><span class="txt">決定認領或結案</span></div>
+        <span class="join" aria-hidden="true"></span>
+        <div class="step ai"><span class="badge">AI</span><span class="txt">認領後排進進度</span></div>
+      </div>
+      <div class="hours">
+        <p class="h-note">這個流程花的時間（個人估算）</p>
+        <div class="hr"><span class="k">原本</span><div class="hbar"><i class="old" style="width:18.75%"></i></div><span class="n">1.5 小時/週</span></div>
+        <div class="hr"><span class="k">現在</span><div class="hbar"><i class="now" style="width:6.25%"></i></div><span class="n">0.5 小時/週</span></div>
+        <div class="h-save">此流程少花 1 小時/週</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="saved">
+  <div class="wrap">
+    <div class="kicker">06</div>
+    <h2>同樣 45 小時，跟那時的團隊比</h2>
+    <p class="intro">一週仍大約工作 45 小時（5 天），總工時沒有變少。下面比較 2025 年 1–3 月的工程師（正職＋兼職），與今年 10 月到今天、有 AI 協作的兩位開發者。12 月尚未開始。各流程花的時間仍是個人估算。</p>
+                <div class="teaser out">
+      <div>
+        <div class="big"><span class="num">6</span><span class="unit">倍</span></div>
+        <p class="headline">有 AI 協作後，工程人均產出約 6 倍</p>
+        <p class="sub">人均以 2 位正職相除；兼職如實列出，不換成正職。2026 年 10–12 月尚未過完，先統計到 11 月 18 日。</p>
+      </div>
+      <div class="period">
+        <article class="pcard">
+          <div>
+            <h3>2025 年 1–3 月</h3>
+          </div>
+          <div class="people">
+            <span class="picons" aria-hidden="true"><svg class="picon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg><svg class="picon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg><svg class="picon pt" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg></span>
+            <span class="plab">正職 2 人＋兼職 1 人</span>
+          </div>
+          <ul class="roster">
+            <li>我（技術長，正職，全季）</li>
+            <li>鄭皓天（前端，正職，做到 2/14）</li>
+            <li>丞俊（前端，兼職，2/6 起）</li>
+          </ul>
+          <div class="pm">
+            <div class="line"><span class="k">開發產出</span><div class="hbar"><i class="old" style="width:17.6%"></i></div><span class="n">0.6 張/週</span></div>
+            <div class="line"><span class="k">人均（÷ 2 位正職）</span><div class="hbar"><i class="old" style="width:8.8%"></i></div><span class="n">0.3 張/週</span></div>
+          </div>
+          <p class="muted">個人產出無法從卡片指派分開計算（多數單未指派到人）。</p>
+        </article>
+        <article class="pcard now">
+          <div>
+            <h3>2026 年 10 月–11 月 18 日</h3>
+            <p class="when">12 月尚未開始，先統計到今天</p>
+          </div>
+          <div class="people">
+            <span class="picons" aria-hidden="true"><svg class="picon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg><svg class="picon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.2 19c.9-3.3 3.3-5 6.8-5s5.9 1.7 6.8 5"/></svg></span>
+            <span class="plab">正職 2 人（皆參與開發）</span>
+          </div>
+          <ul class="roster">
+            <li>我（正職，全期）</li>
+            <li>Bettina（產品設計，正職，亦參與開發，全期）</li>
+          </ul>
+          <div class="pm">
+            <div class="line"><span class="k">開發產出</span><div class="hbar"><i class="now" style="width:100%"></i></div><span class="n">3.4 張/週</span></div>
+            <div class="line"><span class="k">人均（÷ 2 位正職）</span><div class="hbar"><i class="now" style="width:50%"></i></div><span class="n">1.7 張/週</span></div>
+            <div class="line"><span class="k">其中：我</span><div class="hbar"><i class="now" style="width:70.6%"></i></div><span class="n">2.4 張/週</span></div>
+            <div class="line"><span class="k">其中：Bettina</span><div class="hbar"><i class="now" style="width:29.4%"></i></div><span class="n">1.0 張/週</span></div>
+          </div>
+        </article>
+      </div>
+      <p class="exhead">空出來的時間，這段期間實際做了：</p>
+      <ul class="exnow">
+        <li><b>產品線架構拆分</b>第一到五階段已展開，第一階段已進測試站</li>
+        <li><b>內部系統後台串戴尼</b>金流對帳流程調整中</li>
+        <li><b>AI 自動翻譯</b>已正式上線</li>
+        <li><b>臺史博導覽系統</b>需求訪談與設計迭代進行中</li>
+      </ul>
+      <p class="src">依卡片紀錄統計。比較 2025 年 1–3 月工程師（正職＋兼職）與 2026 年 10 月 1 日–11 月 18 日兩位開發者的開發單，皆為每週平均；開卡落在區間內、目前狀態為已完成。2025 年 1–3 月是基礎建設期，開卡較少、粒度也較粗；現在一項功能常拆成多張子執行卡，張數會偏高。11 月進行中未計入，現在偏保守。人均以 2 位正職相除，兼職不列入分母、也不折算成正職。各流程花的時間仍是個人估算。</p>
+    </div>
+    <p class="src" style="margin:16px 0 8px">各流程省下的時間是個人估算，用來說明同樣 45 小時是怎麼騰出來的：</p>
+    <div class="areasum">
+      <div class="asum">
+        <h3>日常營運</h3>
+        <div class="pair"><span>花在這些流程上的時間</span><b>11 → 2.5 小時</b></div>
+        <div class="hbar" style="height:12px"><i class="old" style="width:73.3%"></i></div>
+        <div class="hbar" style="height:12px;margin-top:4px"><i class="now" style="width:16.7%"></i></div>
+        <div class="h-save" style="margin-top:6px">挪出 8.5 小時</div>
+      </div>
+      <div class="asum">
+        <h3>產品開發</h3>
+        <div class="pair"><span>花在這些流程上的時間</span><b>15 → 4 小時</b></div>
+        <div class="hbar" style="height:12px"><i class="old" style="width:100%"></i></div>
+        <div class="hbar" style="height:12px;margin-top:4px"><i class="now" style="width:26.7%"></i></div>
+        <div class="h-save" style="margin-top:6px">挪出 11 小時</div>
+      </div>
+      <div class="asum">
+        <h3>業務與營運協作</h3>
+        <div class="pair"><span>花在這些流程上的時間</span><b>6.5 → 2 小時</b></div>
+        <div class="hbar" style="height:12px"><i class="old" style="width:43.3%"></i></div>
+        <div class="hbar" style="height:12px;margin-top:4px"><i class="now" style="width:13.3%"></i></div>
+        <div class="h-save" style="margin-top:6px">挪出 4.5 小時</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="human">
+  <div class="wrap">
+    <div class="kicker">07</div>
+    <h2>仍由人決定的事</h2>
+    <p class="intro">AI 做得再多，有幾條線我一直守著。</p>
+    <div class="decide">
+      <div class="d-card">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16v10H4z"/><path d="M8 20h8M12 16v4"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg></div>
+        <div>
+          <h3>對外訊息，我看過才送</h3>
+          <p>給客戶、發到頻道的稿，AI 只擬稿，我按送出才會發。</p>
+        </div>
+      </div>
+      <div class="d-card">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4M12 16h.01"/></svg></div>
+        <div>
+          <h3>不確定是不是我的事，先問我</h3>
+          <p>別人的工作不會進我的待辦。不清楚的放「確認中」，等我說一聲。</p>
+        </div>
+      </div>
+      <div class="d-card">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.2-5.5"/><path d="M4 5v5h5"/></svg></div>
+        <div>
+          <h3>出錯了，說一次就校正</h3>
+          <p>例如內部系統開發不太留痕跡，我也教它要記得列進工時。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <div class="kicker">08</div>
+    <h2>給大家的建議起步</h2>
+    <p class="intro">不用一次全換，從最煩的那件事開始就好。</p>
+    <div class="tips">
+      <div class="tip"><div class="n">1</div><div><h3>先列出每天重複的三件事</h3><p>找資料、整理、回報，通常最適合先交出去。</p></div></div>
+      <div class="tip"><div class="n">2</div><div><h3>先讓 AI 擬稿，你來改</h3><p>週報、會議紀錄、回覆草稿，從看稿開始最安全。</p></div></div>
+      <div class="tip"><div class="n">3</div><div><h3>規則講清楚，錯了就糾正</h3><p>它會記住你的偏好，越用越順。</p></div></div>
+      <div class="tip"><div class="n">4</div><div><h3>守住對外那一步</h3><p>給客戶、給外部的東西，一定自己看過再送。</p></div></div>
+      <div class="tip"><div class="n">5</div><div><h3>做成手機打得開的格式</h3><p>在外面也能看、能回，事情就不會卡在電腦前。</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap">Peter｜藝途科技 ARTOGO 產品｜部門匯報分享用　·　一週約 45 小時（5 天）　·　產出依卡片紀錄統計　·　各流程時間為個人估算</div></footer>
+</body>
+</html>
